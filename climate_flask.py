@@ -119,9 +119,10 @@ def tobs():
 def climatedata(start):
 # Create our session (link) from Python to the DB
     session = Session(engine)
+    start_date = dt.datetime.strptime(start,'%Y-%m-%d')
     t = Measurement.tobs
     temps = [func.min(t), func.max(t), func.avg(t)]
-    temp_stats = session.query(*temps).filter(Measurement.date >= start).all()
+    temp_stats = session.query(*temps).filter(Measurement.date >= start_date).all()
 
     session.close()
 
@@ -139,11 +140,11 @@ def climatedata(start):
 def climatestartend(start, end):
 # Create our session (link) from Python to the DB
     session = Session(engine)
+    start_date = dt.datetime.strptime(start,'%Y-%m-%d')
+    end_date = dt.datetime.strptime(end,'%Y-%m-%d')
     t = Measurement.tobs
     temps = [func.min(t), func.max(t), func.avg(t)]
-    temp_stats = session.query(*temps).filter(Measurement.date >= start).filter(Measurement.date <= end).all()
-
-    session.close()
+    temp_stats = session.query(*temps).filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).all()
 
     # Create a dictionary from the row data and append to a list
     all_tobs = []
